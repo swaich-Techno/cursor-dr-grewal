@@ -75,17 +75,22 @@ The circular “G” logo on the listing was not placed in the header. The heade
 | `public/images/animals/buffalo.jpg` | Water buffalo in a green field | Pexels Licence. https://www.pexels.com/photo/carabaos-on-a-green-field-8242824/ |
 | `public/images/animals/horse.jpg` | Chestnut horse | Pexels Licence. https://www.pexels.com/photo/635499/ |
 | `public/images/animals/landscape.jpg` | Daylight crop field, used on the About panel | Unsplash Licence. https://images.unsplash.com/photo-1500382017468-9049fed747ef |
-| `public/images/animals/hero.jpg` | One pasture scene with a dairy cow, a water buffalo and a dog. No person and no text. Used only in the hero. | Generated for this approval preview on 6 October 2026. It is not a photograph of Dr. Grewal’s animals or premises, and it is not a stock-licence file. Replace it with an approved photograph before production. |
+| `public/images/animals/hero-farmyard.jpg` | Farmyard scene used only in the homepage hero: a veterinarian, a farmer, a child, a dairy cow, a buffalo, two dogs and horses. | Supplied for the homepage on 6 October 2026. It is not a photograph of Dr. Grewal, his animals, or his premises. |
 
 Home-screen icons in `public/icons/` are a plain green tile drawn for this demo, not a trademark reproduction.
+
+## Demonstration assistant
+
+The dog button opens a scripted assistant. Replies are written in advance in English, Hindi, and Punjabi. No language model is called, and nothing is trained. A question is matched against the shared six-product sample catalogue, so a saved product edit changes the suggestion. A match names that product, repeats its short customer notice, and says the price is on enquiry. It does not diagnose or promise a cure. Anything outside that catalogue, including horses, offers a demonstration appointment with Dr. Grewal instead of inventing a medicine. An optional image or short video is checked on the device for type and size. Only the filename and size stay in the browser session. The file is not uploaded or sent. Hindi and Punjabi replies in this chat are drafts.
 
 ## Needs Dr. Grewal’s confirmation before production
 
 - Final product names, indications, species, doses and pack sizes
-- Which photographs and the wordmark may be used, including a replacement for the generated hero pasture scene
+- Which photographs and the wordmark may be used, including whether the supplied homepage farmyard scene may stay
 - Retail prices, or confirmation that checkout stays “price on enquiry”
 - WhatsApp number, phone, email and the address line
 - Whether any certification may be stated beside the products
 - Punjabi translations
+- Hindi and Punjabi replies in the demonstration assistant
 - Full catalogue, prescription handling, payments and who may use the admin tools
 - Customer reviews, if any are to be published — the demo shows an empty feedback state

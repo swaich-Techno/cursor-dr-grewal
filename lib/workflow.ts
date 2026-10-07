@@ -8,6 +8,7 @@ export type CustomerStatus =
 
 export type DistributorStatus = "new" | "in-review" | "needs-info" | "approved";
 export type PrescriptionStatus = "awaiting-review" | "needs-info" | "accepted";
+export type ConsultationStatus = "new" | "in-review" | "needs-info" | "accepted";
 
 type Step<T extends string> = { next: T | null; also: T[] };
 
@@ -33,6 +34,13 @@ const prescriptionSteps: Record<PrescriptionStatus, Step<PrescriptionStatus>> = 
   accepted: { next: null, also: [] },
 };
 
+const consultationSteps: Record<ConsultationStatus, Step<ConsultationStatus>> = {
+  new: { next: "in-review", also: [] },
+  "in-review": { next: "accepted", also: ["needs-info"] },
+  "needs-info": { next: "in-review", also: [] },
+  accepted: { next: null, also: [] },
+};
+
 function allows<T extends string>(step: Step<T>, from: T, to: T) {
   if (from === to) return true;
   return step.next === to || step.also.includes(to);
@@ -50,6 +58,10 @@ export function prescriptionStep(status: PrescriptionStatus) {
   return prescriptionSteps[status];
 }
 
+export function consultationStep(status: ConsultationStatus) {
+  return consultationSteps[status];
+}
+
 export function canSetCustomerStatus(from: CustomerStatus, to: CustomerStatus) {
   return allows(customerSteps[from], from, to);
 }
@@ -62,6 +74,10 @@ export function canSetPrescriptionStatus(from: PrescriptionStatus, to: Prescript
   return allows(prescriptionSteps[from], from, to);
 }
 
+export function canSetConsultationStatus(from: ConsultationStatus, to: ConsultationStatus) {
+  return allows(consultationSteps[from], from, to);
+}
+
 export function customerAwaiting(status: CustomerStatus) {
   return status !== "payment-simulated";
 }
@@ -71,5 +87,9 @@ export function distributorAwaiting(status: DistributorStatus) {
 }
 
 export function prescriptionAwaiting(status: PrescriptionStatus) {
+  return status !== "accepted";
+}
+
+export function consultationAwaiting(status: ConsultationStatus) {
   return status !== "accepted";
 }

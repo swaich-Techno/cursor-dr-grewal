@@ -50,7 +50,7 @@ export function HomePage() {
         </div>
         <div className="relative order-1 aspect-video bg-[#f4f8f1] lg:aspect-auto lg:h-full">
           <Image
-            src="/images/animals/hero.jpg"
+            src="/images/animals/hero-farmyard.jpg"
             alt={t("heroImageAlt")}
             fill
             priority

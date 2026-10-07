@@ -9,16 +9,20 @@ import {
   type ReactNode,
 } from "react";
 import { products, type Product } from "@/lib/catalog";
+import type { ChatLocale } from "@/lib/chat-demo";
 import {
+  canSetConsultationStatus,
   canSetCustomerStatus,
   canSetDistributorStatus,
   canSetPrescriptionStatus,
+  type ConsultationStatus,
   type CustomerStatus,
   type DistributorStatus,
   type PrescriptionStatus,
 } from "@/lib/workflow";
 
-export type { CustomerStatus, DistributorStatus, PrescriptionStatus };
+export type { ConsultationStatus, CustomerStatus, DistributorStatus, PrescriptionStatus };
+export type { ChatLocale };
 
 export type BasketLine = { slug: string; quantity: number };
 
@@ -62,6 +66,28 @@ export type PrescriptionRequest = {
   staffNote: string;
 };
 
+export type ConsultationRequest = {
+  id: string;
+  sample: boolean;
+  createdLabel: string;
+  name: string;
+  contact: string;
+  animal: string;
+  concern: string;
+  timeLabel: string;
+  filename: string;
+  sizeBytes: number;
+  status: ConsultationStatus;
+  staffNote: string;
+};
+
+export type ChatTurn =
+  | { id: string; role: "visitor"; text: string }
+  | { id: string; role: "assistant"; kind: "suggest"; slug: string }
+  | { id: string; role: "assistant"; kind: "consult"; concern: string }
+  | { id: string; role: "assistant"; kind: "clarify" }
+  | { id: string; role: "assistant"; kind: "booked"; reference: string };
+
 type ProductOverride = {
   summary?: string;
   detail?: string;
@@ -74,6 +100,10 @@ type DemoState = {
   customers: CustomerEnquiry[];
   distributors: DistributorEnquiry[];
   prescriptions: PrescriptionRequest[];
+  consultations: ConsultationRequest[];
+  chat: ChatTurn[];
+  chatLocale: ChatLocale | null;
+  sessionNonce: number;
   overrides: Record<string, ProductOverride>;
 };
 
@@ -138,6 +168,25 @@ function initialState(): DemoState {
         staffNote: "",
       },
     ],
+    consultations: [
+      {
+        id: "A-101",
+        sample: true,
+        createdLabel: "Sample record",
+        name: "Sample Customer",
+        contact: "demo@example.com",
+        animal: "Horse",
+        concern: "Demonstration concern that is not in the six-product sample.",
+        timeLabel: "Morning sample",
+        filename: "sample-hoof.jpg",
+        sizeBytes: 180000,
+        status: "new",
+        staffNote: "",
+      },
+    ],
+    chat: [],
+    chatLocale: null,
+    sessionNonce: 0,
   };
 }
 
@@ -165,6 +214,15 @@ type DemoValue = DemoState & {
     id: string,
     patch: Partial<Pick<PrescriptionRequest, "status" | "staffNote">>,
   ) => void;
+  submitConsultation: (
+    input: Omit<ConsultationRequest, "id" | "sample" | "createdLabel" | "status" | "staffNote">,
+  ) => string;
+  updateConsultation: (
+    id: string,
+    patch: Partial<Pick<ConsultationRequest, "status" | "staffNote">>,
+  ) => void;
+  appendChat: (turns: ChatTurn[]) => void;
+  setChatLocale: (locale: ChatLocale) => void;
   saveProduct: (slug: string, override: ProductOverride) => void;
   resetDemo: () => void;
 };
@@ -295,6 +353,49 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const submitConsultation = useCallback(
+    (input: Omit<ConsultationRequest, "id" | "sample" | "createdLabel" | "status" | "staffNote">) => {
+      let created = "";
+      setState((prev) => {
+        created = nextId("A", prev.consultations);
+        const request: ConsultationRequest = {
+          ...input,
+          id: created,
+          sample: false,
+          createdLabel: nowLabel(),
+          status: "new",
+          staffNote: "",
+        };
+        return { ...prev, consultations: [request, ...prev.consultations] };
+      });
+      return created;
+    },
+    [],
+  );
+
+  const updateConsultation = useCallback(
+    (id: string, patch: Partial<Pick<ConsultationRequest, "status" | "staffNote">>) => {
+      setState((prev) => ({
+        ...prev,
+        consultations: prev.consultations.map((row) => {
+          if (row.id !== id) return row;
+          const status =
+            patch.status && canSetConsultationStatus(row.status, patch.status) ? patch.status : row.status;
+          return { ...row, ...patch, status };
+        }),
+      }));
+    },
+    [],
+  );
+
+  const appendChat = useCallback((turns: ChatTurn[]) => {
+    setState((prev) => ({ ...prev, chat: [...prev.chat, ...turns] }));
+  }, []);
+
+  const setChatLocale = useCallback((chatLocale: ChatLocale) => {
+    setState((prev) => ({ ...prev, chatLocale }));
+  }, []);
+
   const updatePrescription = useCallback(
     (id: string, patch: Partial<Pick<PrescriptionRequest, "status" | "staffNote">>) => {
       setState((prev) => ({
@@ -316,7 +417,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
-  const resetDemo = useCallback(() => setState(initialState()), []);
+  const resetDemo = useCallback(() => setState({ ...initialState(), sessionNonce: Date.now() }), []);
 
   const catalogue = useMemo(
     () =>
@@ -348,6 +449,10 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       updateCustomer,
       updateDistributor,
       updatePrescription,
+      submitConsultation,
+      updateConsultation,
+      appendChat,
+      setChatLocale,
       saveProduct,
       resetDemo,
     }),
@@ -363,6 +468,10 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       updateCustomer,
       updateDistributor,
       updatePrescription,
+      submitConsultation,
+      updateConsultation,
+      appendChat,
+      setChatLocale,
       saveProduct,
       resetDemo,
     ],

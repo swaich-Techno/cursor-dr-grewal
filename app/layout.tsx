@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Manrope, Noto_Sans_Gurmukhi, Source_Serif_4 } from "next/font/google";
+import { Manrope, Noto_Sans_Devanagari, Noto_Sans_Gurmukhi, Source_Serif_4 } from "next/font/google";
 import { DemoProvider } from "@/lib/demo-store";
 import { LanguageProvider } from "@/lib/i18n";
+import { PetChat } from "@/components/PetChat";
 import { DemoBanner, SiteFooter, SiteHeader, SkipLink } from "@/components/SiteChrome";
 import "./globals.css";
 
@@ -17,6 +18,13 @@ const gurmukhi = Noto_Sans_Gurmukhi({
   subsets: ["gurmukhi"],
   weight: ["400", "600", "700"],
   variable: "--font-gurmukhi",
+  display: "swap",
+});
+
+const devanagari = Noto_Sans_Devanagari({
+  subsets: ["devanagari"],
+  weight: ["400", "600", "700"],
+  variable: "--font-devanagari",
   display: "swap",
 });
 
@@ -53,7 +61,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${manrope.variable} ${gurmukhi.variable} ${sourceSerif.variable} h-full`}>
+    <html lang="en" className={`${manrope.variable} ${gurmukhi.variable} ${devanagari.variable} ${sourceSerif.variable} h-full`}>
       <body className="flex min-h-full flex-col antialiased">
         <LanguageProvider>
           <DemoProvider>
@@ -64,6 +72,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               {children}
             </main>
             <SiteFooter />
+            <PetChat />
           </DemoProvider>
         </LanguageProvider>
       </body>

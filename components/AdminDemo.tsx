@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useState, type KeyboardEvent } from "react";
 import {
   useDemo,
+  type ConsultationRequest,
+  type ConsultationStatus,
   type CustomerEnquiry,
   type CustomerStatus,
   type DistributorEnquiry,
@@ -14,6 +16,8 @@ import {
 import { fill, useI18n, type MessageKey } from "@/lib/i18n";
 import { formatBytes } from "@/lib/prescription";
 import {
+  consultationAwaiting,
+  consultationStep,
   customerAwaiting,
   customerStep,
   distributorAwaiting,
@@ -23,13 +27,14 @@ import {
 } from "@/lib/workflow";
 import { btnPrimary, btnSecondary, Dialog } from "@/components/ui";
 
-type TabId = "products" | "customers" | "distributors" | "prescriptions";
+type TabId = "products" | "customers" | "distributors" | "prescriptions" | "consultations";
 
 const tabs: { id: TabId; label: MessageKey }[] = [
   { id: "products", label: "adminTabProducts" },
   { id: "customers", label: "adminTabCustomers" },
   { id: "distributors", label: "adminTabDistributors" },
   { id: "prescriptions", label: "adminTabPrescriptions" },
+  { id: "consultations", label: "adminTabConsultations" },
 ];
 
 const customerStatusKey: Record<CustomerStatus, MessageKey> = {
@@ -76,6 +81,20 @@ const prescriptionActionKey: Record<PrescriptionStatus, MessageKey> = {
   accepted: "adminAccept",
 };
 
+const consultationStatusKey: Record<ConsultationStatus, MessageKey> = {
+  new: "statusNew",
+  "in-review": "statusReview",
+  "needs-info": "statusNeeds",
+  accepted: "statusAccepted",
+};
+
+const consultationActionKey: Record<ConsultationStatus, MessageKey> = {
+  new: "statusNew",
+  "in-review": "adminReview",
+  "needs-info": "adminMore",
+  accepted: "adminAccept",
+};
+
 export function AdminDemo() {
   const { t } = useI18n();
   const demo = useDemo();
@@ -87,11 +106,13 @@ export function AdminDemo() {
     customers: demo.customers.filter((row) => customerAwaiting(row.status)).length,
     distributors: demo.distributors.filter((row) => distributorAwaiting(row.status)).length,
     prescriptions: demo.prescriptions.filter((row) => prescriptionAwaiting(row.status)).length,
+    consultations: demo.consultations.filter((row) => consultationAwaiting(row.status)).length,
   };
   const completed = {
     customers: demo.customers.length - counts.customers,
     distributors: demo.distributors.length - counts.distributors,
     prescriptions: demo.prescriptions.length - counts.prescriptions,
+    consultations: demo.consultations.length - counts.consultations,
   };
 
   function onTabKey(event: KeyboardEvent<HTMLDivElement>) {
@@ -140,7 +161,7 @@ export function AdminDemo() {
           )}
         </div>
 
-        <div role="tablist" aria-label={t("adminTitle")} className="mt-3 grid gap-2 sm:grid-cols-4" onKeyDown={onTabKey}>
+        <div role="tablist" aria-label={t("adminTitle")} className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5" onKeyDown={onTabKey}>
           {tabs.map((item) => {
             const selected = tab === item.id;
             return (
@@ -169,6 +190,7 @@ export function AdminDemo() {
           {tab === "customers" ? <CustomerList /> : null}
           {tab === "distributors" ? <DistributorList /> : null}
           {tab === "prescriptions" ? <PrescriptionList /> : null}
+          {tab === "consultations" ? <ConsultationList /> : null}
         </div>
       </div>
     </div>
@@ -486,6 +508,87 @@ function PrescriptionDetail({ row }: { row: PrescriptionRequest }) {
       <NoteField id={`${row.id}-note`} value={note} onChange={setNote} />
       {error ? <p className="text-sm text-[#8d2b16]">{error}</p> : null}
       <ActionRow next={step.next} also={step.also} labelFor={(status) => t(prescriptionActionKey[status])} onApply={apply} />
+    </div>
+  );
+}
+
+function ConsultationList() {
+  const { t } = useI18n();
+  const { consultations } = useDemo();
+  const [id, setId] = useState<string | null>(null);
+  const row = consultations.find((item) => item.id === id) ?? null;
+
+  return (
+    <>
+      {consultations.length === 0 ? <p className="text-sm">{t("adminEmpty")}</p> : null}
+      <ul className="grid gap-2">
+        {consultations.map((item) => (
+          <li key={item.id}>
+            <button type="button" className="grid w-full gap-1 rounded-lg border border-[#e6eee8] p-3 text-left hover:border-[#b7d0be] sm:grid-cols-[7rem_1fr_auto]" onClick={() => setId(item.id)}>
+              <span className="font-bold">
+                {item.id}
+                {item.sample ? <Sample /> : null}
+              </span>
+              <span>
+                <span className="block font-semibold">{item.name}</span>
+                <span className="block text-sm text-[#3e4c45]">{item.createdLabel}</span>
+              </span>
+              <span className="text-sm font-semibold text-[#0e4d28]">
+                {t(consultationStatusKey[item.status])}
+                <span className="mt-1 block font-semibold underline">{t("adminOpenDetails")}</span>
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
+      <Dialog open={Boolean(row)} title={row?.id ?? t("adminConsultations")} closeLabel={t("navClose")} onClose={() => setId(null)} wide>
+        {row ? <ConsultationDetail key={row.id} row={row} /> : null}
+      </Dialog>
+    </>
+  );
+}
+
+function ConsultationDetail({ row }: { row: ConsultationRequest }) {
+  const { t } = useI18n();
+  const { updateConsultation } = useDemo();
+  const [note, setNote] = useState(row.staffNote);
+  const [error, setError] = useState("");
+  const step = consultationStep(row.status);
+
+  function apply(status: ConsultationStatus) {
+    if (status === "needs-info" && note.trim().length < 3) {
+      setError(t("adminNoteError"));
+      return;
+    }
+    setError("");
+    updateConsultation(row.id, { status, staffNote: note.trim() });
+  }
+
+  return (
+    <div className="grid gap-3 text-[#1c2420]">
+      <p className="text-sm font-semibold text-[#0e4d28]">{t(consultationStatusKey[row.status])}</p>
+      <p className="text-sm text-[#3e4c45]">
+        {row.name} · {row.contact} · {row.animal} · {row.createdLabel}
+      </p>
+      <p className="text-sm">
+        <span className="font-semibold">{t("adminConsultConcern")}: </span>
+        {row.concern}
+      </p>
+      <p className="text-sm">
+        <span className="font-semibold">{t("adminConsultTime")}: </span>
+        {row.timeLabel}
+      </p>
+      {row.filename ? (
+        <p className="text-sm">
+          {row.filename} · {formatBytes(row.sizeBytes)}
+        </p>
+      ) : (
+        <p className="text-sm">{t("adminNoFile")}</p>
+      )}
+      <p className="text-sm">{t("adminFileKept")}</p>
+      <NoteField id={`${row.id}-note`} value={note} onChange={setNote} />
+      {error ? <p className="text-sm text-[#8d2b16]">{error}</p> : null}
+      <ActionRow next={step.next} also={step.also} labelFor={(status) => t(consultationActionKey[status])} onApply={apply} />
     </div>
   );
 }

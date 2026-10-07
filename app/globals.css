@@ -36,6 +36,16 @@ html[lang="pa"] body {
   outline-offset: 2px;
 }
 
+h1,
+h2,
+.font-display {
+  font-family: var(--font-source-serif), var(--font-gurmukhi), Georgia, serif;
+}
+
+.font-display {
+  font-weight: 700;
+}
+
 .accent-bar {
   width: 2rem;
   height: 3px;

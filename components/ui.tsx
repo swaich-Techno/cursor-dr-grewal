@@ -83,12 +83,14 @@ export function Dialog({
   title,
   onClose,
   closeLabel,
+  wide = false,
   children,
 }: {
   open: boolean;
   title: string;
   onClose: () => void;
   closeLabel: string;
+  wide?: boolean;
   children: ReactNode;
 }) {
   const ref = useDialog(open, onClose);
@@ -108,7 +110,7 @@ export function Dialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative z-10 w-full max-w-lg rounded-xl bg-white p-5 shadow-xl"
+        className={`relative z-10 w-full rounded-xl bg-white p-5 shadow-xl ${wide ? "max-h-[85vh] max-w-2xl overflow-y-auto" : "max-w-lg"}`}
       >
         <div className="flex items-start justify-between gap-4">
           <h2 id={titleId} className="text-xl font-bold text-[#0e4d28]">

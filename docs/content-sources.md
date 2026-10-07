@@ -75,13 +75,14 @@ The circular “G” logo on the listing was not placed in the header. The heade
 | `public/images/animals/buffalo.jpg` | Water buffalo in a green field | Pexels Licence. https://www.pexels.com/photo/carabaos-on-a-green-field-8242824/ |
 | `public/images/animals/horse.jpg` | Chestnut horse | Pexels Licence. https://www.pexels.com/photo/635499/ |
 | `public/images/animals/landscape.jpg` | Daylight crop field, used on the About panel | Unsplash Licence. https://images.unsplash.com/photo-1500382017468-9049fed747ef |
+| `public/images/animals/hero.jpg` | One pasture scene with a dairy cow, a water buffalo and a dog. No person and no text. Used only in the hero. | Generated for this approval preview on 6 October 2026. It is not a photograph of Dr. Grewal’s animals or premises, and it is not a stock-licence file. Replace it with an approved photograph before production. |
 
 Home-screen icons in `public/icons/` are a plain green tile drawn for this demo, not a trademark reproduction.
 
 ## Needs Dr. Grewal’s confirmation before production
 
 - Final product names, indications, species, doses and pack sizes
-- Which photographs and the wordmark may be used
+- Which photographs and the wordmark may be used, including a replacement for the generated hero pasture scene
 - Retail prices, or confirmation that checkout stays “price on enquiry”
 - WhatsApp number, phone, email and the address line
 - Whether any certification may be stated beside the products

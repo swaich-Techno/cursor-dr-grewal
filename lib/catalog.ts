@@ -8,7 +8,12 @@ export type Product = {
   animals: AnimalId[];
   animalLabel: string;
   packNote: string;
+  /** Short notice shown to customers when species, indication or pack is unconfirmed. */
+  notice: string;
+  /** Staff approval note. May include source conflicts that are not shown to customers. */
   confirmation: string;
+  /** True when species or indication is still unresolved. */
+  uncertain: boolean;
   image: string;
   imageAlt: string;
   featured: boolean;
@@ -29,8 +34,10 @@ export const products: Product[] = [
     animals: ["cattle-buffalo"],
     animalLabel: "Cattle & Buffalo",
     packNote: "Public listing: 15 mL bottle. Confirm the pack size.",
+    notice: "Pack size still needs confirmation. Artwork silhouettes are not extra species.",
     confirmation:
       "The pack photograph shows a cow and several livestock silhouettes, including a horse. Those silhouettes are not treated as a confirmed horse product. Please confirm species and pack size.",
+    uncertain: true,
     image: "/images/products/g-appet.jpg",
     imageAlt: "Pack photograph of G Appet from the public Grewal Homeo Remedies listing",
     featured: true,
@@ -44,8 +51,10 @@ export const products: Product[] = [
     animals: ["dogs"],
     animalLabel: "Dogs",
     packNote: "Pack photograph reads 15 ml. Confirm the pack size.",
+    notice: "The public listing and the pack do not agree on the indication. Species and pack size still need confirmation.",
     confirmation:
       "The public pages do not agree: liver support, a general veterinary listing, and a pack marked Anorexia. Another image file on the listing is named as G Liv but shows G Milet, so it is not used. Please confirm indication, species and pack.",
+    uncertain: true,
     image: "/images/products/g-liv.jpg",
     imageAlt: "Pack photograph of G Liv from the public Grewal Homeo Remedies listing",
     featured: true,
@@ -59,8 +68,10 @@ export const products: Product[] = [
     animals: ["cattle-buffalo"],
     animalLabel: "Cattle & Buffalo",
     packNote: "Public listing: 15 mL bottle. Confirm the pack size.",
+    notice: "Confirm which dairy species are supplied, and the pack size.",
     confirmation:
       "Please confirm which dairy species are supplied and the pack size before this is offered for sale.",
+    uncertain: false,
     image: "/images/products/g-uddar.jpg",
     imageAlt: "Pack photograph of G Uddar from the public Grewal Homeo Remedies listing",
     featured: true,
@@ -74,8 +85,10 @@ export const products: Product[] = [
     animals: ["cattle-buffalo"],
     animalLabel: "Cattle & Buffalo",
     packNote: "Public listing: 15 mL bottle. Confirm the pack size.",
+    notice: "Species beyond the cattle photograph, and the pack size, still need confirmation.",
     confirmation:
       "The pack artwork includes other livestock silhouettes. Species beyond the cattle photograph are not confirmed. Please confirm species and pack size.",
+    uncertain: true,
     image: "/images/products/g-eliksir.jpg",
     imageAlt: "Pack photograph of G Eliksir from the public Grewal Homeo Remedies listing",
     featured: false,
@@ -89,8 +102,9 @@ export const products: Product[] = [
     animals: ["dogs"],
     animalLabel: "Dogs",
     packNote: "Pack photograph reads 15 ml. Confirm the pack size.",
-    confirmation:
-      "Please confirm the exact indication and pack size with the team.",
+    notice: "Confirm the exact indication and pack size.",
+    confirmation: "Please confirm the exact indication and pack size with the team.",
+    uncertain: false,
     image: "/images/products/g-petworm.jpg",
     imageAlt: "Pack photograph of G Petworm from the public Grewal Homeo Remedies listing",
     featured: false,
@@ -104,8 +118,10 @@ export const products: Product[] = [
     animals: ["cattle-buffalo", "dogs"],
     animalLabel: "Cattle & Buffalo, Dogs",
     packNote: "Public listing: 15 mL bottle. Confirm the pack size.",
+    notice: "Sources do not agree on the species. Indication and pack size still need confirmation.",
     confirmation:
       "The livestock pack photograph and the dog listing do not describe the same species. Please confirm who it is for, and the indication, before it is grouped in the catalogue.",
+    uncertain: true,
     image: "/images/products/g-dermi.jpg",
     imageAlt: "Pack photograph of G Dermi from the public Grewal Homeo Remedies listing",
     featured: false,

@@ -104,7 +104,7 @@ export function SiteHeader() {
       <div className="mx-auto flex w-full max-w-[1120px] flex-wrap items-center gap-2 px-4 py-3 sm:gap-3 sm:px-6 md:flex-nowrap">
         <Link href="/" className="mr-auto flex min-w-0 items-start gap-1.5">
           <span className="min-w-0">
-            <span className="flex items-center gap-1 text-[1.15rem] font-extrabold tracking-tight text-[#0e4d28] sm:text-[1.35rem]">
+            <span className="font-display flex items-center gap-1 text-[1.2rem] tracking-tight text-[#0e4d28] sm:text-[1.4rem]">
               Dr. Grewal
               <LeafMark />
             </span>
@@ -151,7 +151,7 @@ export function SiteHeader() {
         </nav>
 
         <form
-          className="hidden md:block"
+          className="hidden lg:block"
           role="search"
           onSubmit={(event) => {
             event.preventDefault();
@@ -175,7 +175,7 @@ export function SiteHeader() {
           </div>
         </form>
 
-        <button type="button" className="inline-flex min-h-11 min-w-11 items-center justify-center text-[#0e4d28] md:hidden" aria-label={t("navSearch")} onClick={() => setSearchOpen(true)}>
+        <button type="button" className="inline-flex min-h-11 min-w-11 items-center justify-center text-[#0e4d28] lg:hidden" aria-label={t("navSearch")} onClick={() => setSearchOpen(true)}>
           <SearchIcon />
         </button>
 
@@ -281,20 +281,28 @@ export function SiteHeader() {
 export function SiteFooter() {
   const { t } = useI18n();
   return (
-    <footer className="mt-auto border-t border-[#e6eee8] bg-[#f7faf7]">
-      <div className="mx-auto grid w-full max-w-[1120px] gap-4 px-4 py-8 text-sm text-[#3e4c45] sm:px-6 md:grid-cols-[1.4fr_1fr]">
+    <footer className="mt-auto bg-[#0c3d22] text-[#f4f7f2]">
+      <div className="mx-auto grid w-full max-w-[1120px] gap-4 px-4 py-8 text-sm sm:px-6 md:grid-cols-[1.4fr_1fr]">
         <div>
-          <p className="font-bold text-[#0e4d28]">Dr. Grewal</p>
-          <p className="mt-1">{t("footerAddress")}</p>
-          <p className="mt-1 text-xs">{t("footerAddressNote")}</p>
-          <p className="mt-3 text-xs">{t("footerRefresh")}</p>
-          <p className="mt-1 text-xs text-[#6a5a32]">{t("langNote")}</p>
+          <p className="font-display text-lg text-white">Dr. Grewal</p>
+          <p className="mt-1 text-[#e7f0ea]">{t("footerAddress")}</p>
+          <p className="mt-1 text-xs text-[#d5e4da]">{t("footerAddressNote")}</p>
+          <p className="mt-3 text-xs text-[#d5e4da]">{t("footerRefresh")}</p>
+          <p className="mt-1 text-xs text-[#f3e6c4]">{t("langNote")}</p>
         </div>
-        <nav className="grid content-start gap-2 font-semibold text-[#0e4d28]" aria-label="Footer">
-          <Link href="/distributor">{t("footerDistributor")}</Link>
-          <Link href="/payment">{t("footerPayment")}</Link>
-          <Link href="/prescription">{t("supportPrescription")}</Link>
-          <Link href="/admin">{t("adminDemo")}</Link>
+        <nav className="grid content-start gap-2 font-semibold text-[#f7f3e8]" aria-label="Footer">
+          <Link href="/distributor" className="underline-offset-4 hover:underline">
+            {t("footerDistributor")}
+          </Link>
+          <Link href="/payment" className="underline-offset-4 hover:underline">
+            {t("footerPayment")}
+          </Link>
+          <Link href="/prescription" className="underline-offset-4 hover:underline">
+            {t("supportPrescription")}
+          </Link>
+          <Link href="/admin" className="underline-offset-4 hover:underline">
+            {t("adminDemo")}
+          </Link>
         </nav>
       </div>
     </footer>

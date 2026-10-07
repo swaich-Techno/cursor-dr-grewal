@@ -93,7 +93,9 @@ export function Catalogue() {
         ) : null}
       </div>
 
-      <p className="mt-4 text-sm text-[#3e4c45]">{fill(t("catalogueCount"), { count: results.length })}</p>
+      <p className="mt-4 text-sm text-[#3e4c45]">
+        {fill(results.length === 1 ? t("catalogueCountOne") : t("catalogueCount"), { count: results.length })}
+      </p>
 
       {results.length === 0 ? (
         <div className="mt-4 rounded-xl border border-[#e6eee8] bg-[#f7faf7] p-5">
@@ -106,13 +108,14 @@ export function Catalogue() {
         <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {results.map((product) => (
             <li key={product.slug}>
-              <Link href={`/products/${product.slug}`} className="block h-full rounded-xl border border-[#e6eee8] bg-white p-3 hover:border-[#b7d0be]">
+              <Link href={`/products/${product.slug}`} className="flex h-full flex-col rounded-xl border border-[#e6eee8] bg-white p-3 hover:border-[#b7d0be]">
                 <span className="relative block h-48 bg-[#fafafa]">
                   <Image src={product.image} alt={product.imageAlt} fill className="object-contain p-3" sizes="280px" />
                 </span>
                 <span className="mt-3 block text-lg font-bold">{product.name}</span>
-                <span className="mt-1 block text-sm leading-relaxed text-[#3e4c45]">{product.summary}</span>
-                <span className="mt-3 block text-sm font-semibold text-[#0e4d28]">{t("price")}</span>
+                <span className="mt-1 block flex-1 text-sm leading-relaxed text-[#3e4c45]">{product.summary}</span>
+                {product.uncertain ? <span className="mt-2 text-xs font-semibold text-[#6a5a32]">{t("toConfirm")}</span> : null}
+                <span className="mt-2 block text-sm font-semibold text-[#0e4d28]">{t("price")}</span>
               </Link>
             </li>
           ))}
@@ -158,7 +161,7 @@ export function ProductDetail({ slug }: { slug: string }) {
             </div>
             <div className="rounded-lg bg-[#fbf6ea] p-3">
               <dt className="font-semibold text-[#3f3420]">{t("detailConfirm")}</dt>
-              <dd className="mt-1 leading-relaxed text-[#3f3420]">{product.confirmation}</dd>
+              <dd className="mt-1 leading-relaxed text-[#3f3420]">{product.notice}</dd>
             </div>
           </dl>
           <div className="mt-5">

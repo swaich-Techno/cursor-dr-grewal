@@ -564,36 +564,36 @@ export function SupportView() {
     <div className="mx-auto w-full max-w-[1120px] px-4 py-8 sm:px-6">
       <PageIntro title={t("supportTitle")} lede={t("supportLede")} />
       <div className="grid gap-4 md:grid-cols-2">
-        <article className="rounded-xl border border-[#e6eee8] p-5">
+        <article className="flex h-full flex-col rounded-xl border border-[#e6eee8] p-5">
           <h2 className="text-xl font-bold text-[#0e4d28]">{t("supportCustomer")}</h2>
           <p className="mt-2 text-sm leading-relaxed text-[#3e4c45]">{t("supportCustomerBody")}</p>
-          <Link href="/enquiry" className={`${btnPrimary} mt-4`}>
+          <Link href="/enquiry" className={`${btnPrimary} mt-auto self-start pt-4`}>
             {t("supportContact")}
           </Link>
         </article>
-        <article className="rounded-xl border border-[#e6eee8] p-5">
+        <article className="flex h-full flex-col rounded-xl border border-[#e6eee8] p-5">
           <h2 className="text-xl font-bold text-[#0e4d28]">{t("supportPrescription")}</h2>
           <p className="mt-2 text-sm leading-relaxed text-[#3e4c45]">{t("supportPrescriptionBody")}</p>
-          <Link href="/prescription" className={`${btnSecondary} mt-4`}>
+          <Link href="/prescription" className={`${btnSecondary} mt-auto self-start pt-4`}>
             {t("supportUpload")}
           </Link>
         </article>
-        <article className="rounded-xl border border-[#e6eee8] p-5">
+        <article className="flex h-full flex-col rounded-xl border border-[#e6eee8] p-5">
           <h2 className="text-xl font-bold text-[#0e4d28]">{t("supportWhatsapp")}</h2>
           <p className="mt-2 text-sm leading-relaxed text-[#3e4c45]">{t("supportWhatsappBody")}</p>
-          <WhatsAppButton className={`${btnSecondary} mt-4`} />
+          <WhatsAppButton className={`${btnSecondary} mt-auto self-start pt-4`} />
         </article>
-        <article className="rounded-xl border border-[#e6eee8] p-5">
+        <article className="flex h-full flex-col rounded-xl border border-[#e6eee8] p-5">
           <h2 className="text-xl font-bold text-[#0e4d28]">{t("supportDistributor")}</h2>
           <p className="mt-2 text-sm leading-relaxed text-[#3e4c45]">{t("supportDistributorBody")}</p>
-          <Link href="/distributor" className={`${btnSecondary} mt-4`}>
+          <Link href="/distributor" className={`${btnSecondary} mt-auto self-start pt-4`}>
             {t("footerDistributor")}
           </Link>
         </article>
-        <article className="rounded-xl border border-[#e6eee8] p-5 md:col-span-2">
+        <article className="flex h-full flex-col rounded-xl border border-[#e6eee8] p-5 md:col-span-2">
           <h2 className="text-xl font-bold text-[#0e4d28]">{t("supportPayment")}</h2>
           <p className="mt-2 text-sm leading-relaxed text-[#3e4c45]">{t("supportPaymentBody")}</p>
-          <Link href="/payment" className={`${btnSecondary} mt-4`}>
+          <Link href="/payment" className={`${btnSecondary} mt-auto self-start pt-4`}>
             {t("footerPayment")}
           </Link>
         </article>

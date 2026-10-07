@@ -9,17 +9,16 @@ import {
   type ReactNode,
 } from "react";
 import { products, type Product } from "@/lib/catalog";
+import {
+  canSetCustomerStatus,
+  canSetDistributorStatus,
+  canSetPrescriptionStatus,
+  type CustomerStatus,
+  type DistributorStatus,
+  type PrescriptionStatus,
+} from "@/lib/workflow";
 
-export type CustomerStatus =
-  | "new"
-  | "in-review"
-  | "needs-info"
-  | "approved"
-  | "quote-ready"
-  | "payment-simulated";
-
-export type DistributorStatus = "new" | "in-review" | "needs-info" | "approved";
-export type PrescriptionStatus = "awaiting-review" | "needs-info" | "accepted";
+export type { CustomerStatus, DistributorStatus, PrescriptionStatus };
 
 export type BasketLine = { slug: string; quantity: number };
 
@@ -66,6 +65,7 @@ export type PrescriptionRequest = {
 type ProductOverride = {
   summary?: string;
   detail?: string;
+  notice?: string;
   confirmation?: string;
 };
 
@@ -271,7 +271,11 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     (id: string, patch: Partial<Pick<CustomerEnquiry, "status" | "staffNote">>) => {
       setState((prev) => ({
         ...prev,
-        customers: prev.customers.map((row) => (row.id === id ? { ...row, ...patch } : row)),
+        customers: prev.customers.map((row) => {
+          if (row.id !== id) return row;
+          const status = patch.status && canSetCustomerStatus(row.status, patch.status) ? patch.status : row.status;
+          return { ...row, ...patch, status };
+        }),
       }));
     },
     [],
@@ -281,7 +285,11 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     (id: string, patch: Partial<Pick<DistributorEnquiry, "status" | "staffNote">>) => {
       setState((prev) => ({
         ...prev,
-        distributors: prev.distributors.map((row) => (row.id === id ? { ...row, ...patch } : row)),
+        distributors: prev.distributors.map((row) => {
+          if (row.id !== id) return row;
+          const status = patch.status && canSetDistributorStatus(row.status, patch.status) ? patch.status : row.status;
+          return { ...row, ...patch, status };
+        }),
       }));
     },
     [],
@@ -291,7 +299,11 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     (id: string, patch: Partial<Pick<PrescriptionRequest, "status" | "staffNote">>) => {
       setState((prev) => ({
         ...prev,
-        prescriptions: prev.prescriptions.map((row) => (row.id === id ? { ...row, ...patch } : row)),
+        prescriptions: prev.prescriptions.map((row) => {
+          if (row.id !== id) return row;
+          const status = patch.status && canSetPrescriptionStatus(row.status, patch.status) ? patch.status : row.status;
+          return { ...row, ...patch, status };
+        }),
       }));
     },
     [],
@@ -315,6 +327,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
           ...product,
           summary: override.summary ?? product.summary,
           detail: override.detail ?? product.detail,
+          notice: override.notice ?? product.notice,
           confirmation: override.confirmation ?? product.confirmation,
         };
       }),

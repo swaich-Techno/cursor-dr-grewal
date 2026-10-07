@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Manrope, Noto_Sans_Gurmukhi } from "next/font/google";
+import { Manrope, Noto_Sans_Gurmukhi, Source_Serif_4 } from "next/font/google";
 import { DemoProvider } from "@/lib/demo-store";
 import { LanguageProvider } from "@/lib/i18n";
 import { DemoBanner, SiteFooter, SiteHeader, SkipLink } from "@/components/SiteChrome";
@@ -17,6 +17,13 @@ const gurmukhi = Noto_Sans_Gurmukhi({
   subsets: ["gurmukhi"],
   weight: ["400", "600", "700"],
   variable: "--font-gurmukhi",
+  display: "swap",
+});
+
+const sourceSerif = Source_Serif_4({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-source-serif",
   display: "swap",
 });
 
@@ -46,7 +53,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${manrope.variable} ${gurmukhi.variable} h-full`}>
+    <html lang="en" className={`${manrope.variable} ${gurmukhi.variable} ${sourceSerif.variable} h-full`}>
       <body className="flex min-h-full flex-col antialiased">
         <LanguageProvider>
           <DemoProvider>
